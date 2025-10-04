@@ -3,15 +3,12 @@
 
 // Device Vendor ID (idVendor)
 #ifndef BIRD_VENDOR
-//#define BIRD_VENDOR     1204
-#define BIRD_VENDOR     0x21e2
+#define BIRD_VENDOR  0x04b4
 #endif
 
 // Device Product ID (idProduct)
 #ifndef BIRD_PRODUCT
-//#define BIRD_PRODUCT	4099 // medSAFE
-//#define BIRD_PRODUCT  4101 // trakSTAR
-#define BIRD_PRODUCT    0x1008 // driveBAY2
+#define BIRD_PRODUCT 0x1005
 #endif
 
 // Device Endpoint-Out

@@ -70,12 +70,13 @@ PointATC3DG::PointATC3DG() :
         return;
     }
 
-    ret = usb_set_configuration( handle, 1 );
-    if( ret < 0 ) {
-        error( ret, "setting configuration on USB device."
-                    " Check device permissions? -> %s", usb_strerror() );
-        return;
-    }
+    // ret = usb_set_configuration( handle, 1 );
+    // if( ret < 0 ) {
+    //     error( ret, "setting configuration on USB device."
+    //                 " Check device permissions? -> %s", usb_strerror() );
+    //     return;
+    // }
+    
     ret = usb_claim_interface( handle, 0 );
     if( ret < 0 ) {
         error( ret, "claiming USB interface on device -> %s", usb_strerror() );
