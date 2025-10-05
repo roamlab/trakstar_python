@@ -5,6 +5,37 @@ project(atc3dgtracker)
 # Where custom find modules live
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
+# ------------------ Global RPATH policy (CMake 2.8 compatible) ------------------
+# Keep RPATHs; don't strip them.
+set(CMAKE_SKIP_BUILD_RPATH FALSE)
+set(CMAKE_SKIP_INSTALL_RPATH FALSE)
+
+# Use the *install* rpath while building too, so running from the build tree works
+# without extra env vars. (This is the most 2.8-compatible way to set a build RPATH.)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+
+# Also include linker search paths automatically in the final RPATH
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+# Compute a conda lib path if available
+if(DEFINED ENV{CONDA_PREFIX})
+  set(_CONDA_LIB "$ENV{CONDA_PREFIX}/lib")
+else()
+  set(_CONDA_LIB "")
+endif()
+
+# Where to look at runtime:
+# - next to the installed binaries (../lib)
+# - and your conda env's lib as a fallback (if present)
+if(APPLE)
+  # macOS uses @loader_path instead of $ORIGIN
+  set(CMAKE_INSTALL_RPATH "@loader_path/../lib;${_CONDA_LIB}")
+else()
+  # Escape $ for CMake
+  set(CMAKE_INSTALL_RPATH "\$ORIGIN/../lib;${_CONDA_LIB}")
+endif()
+
+# ------------------ Find libusb-compat (usb.h / libusb) ------------------------
 # --- Try the project's custom finder first (but don't fail if missing) ---
 include(cmake/FindLibUSB.cmake OPTIONAL)
 
@@ -57,14 +88,7 @@ include_directories(
   ${LIBUSB_INCLUDE_DIRS}
 )
 
-# Optional: if installing to /usr/local but linking to conda’s lib, set rpath
-if(DEFINED ENV{CONDA_PREFIX})
-  # This helps the installed binary find the lib in your conda env at runtime.
-  set(CMAKE_INSTALL_RPATH "$ENV{CONDA_PREFIX}/lib")
-  set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
-endif()
-
-# Usual layout
+# ------------------ Project layout ------------------
 add_subdirectory(include)
 add_subdirectory(lib)
 add_subdirectory(src)
