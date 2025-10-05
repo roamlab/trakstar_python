@@ -65,5 +65,6 @@ We are adding `-DCMAKE_PREFIX_PATH="$CONDA_PREFIX"` to tell any “find” logic
 The modification to `include/PointATC3DG.h` are: 
 - `#define BIRD_VENDOR 0x04b4`
 - `#define BIRD_PRODUCT 0x1005`
+
 These are needed because the original ATC3DGTracker codebase had incorrect IDs that prevented us from finding/opening the device. Each hardware manufacturer gets assigned a Vendor ID (VID) by the USB-IF (USB Implementation Forum). Logitech gets `046D`, in our case we see "Cypress Semiconductor Corp." with VID `04b4`. Each product also gets a Product ID (PID) chosen by that manufacturer to distinguish one product/model from another. OS uses these information to choose the right driver and ensure we can communicate with the device. VID and PID can be found by running `lsusb` with the device connected, or running `dmesg -w` with the device unplugged, then plugged the device in.  
 
