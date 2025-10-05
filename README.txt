@@ -49,7 +49,12 @@ Run test script:
 ```
 
 
+
 ## Bug fixes
 
-###
+### How to properly install libusb
+The ATC3DGTracker codebase was built over 10 years ago. `libusb-0.1` was the library back then. Files like `lib/PointATC3DG.cpp` relies on the header `usb.h` to build. `lib/PointATC3DG.cpp` also contains APIs calls to libusb in the format of `usb_init`, `usb_open`, `usb_close`, etc., which were the standard naming convention for `libusb-0.1`. Both the `usb.h` header and the API function naming convention were changed in `libusb-1.0`. The new header is `libusb.h`, and the typical API functions are in the format of `libusb_init`, `libusb_open`, etc. Directly using `apt` to install `libusb-0.1-dev` might seem like the go-to option, but some Linux distros no longer ship `libusb-0.1-dev`, and installing an old libusb package via `apt` (a system-wide install) risks polluting the environment for other projects. If we don't want to modify the source code of ATC3DGTracker, the most convenient method is to install `libusb-compat` in conda/mamba. `libusb-compat` is a compatibility layer/wrappepr that implements the 0.1 API on top of libusb-1.0. When installing via conda, the dependency check also installed the libusb-1.0 runtime in the same conda environment. It also provides the `usb.h` header and allows old code that were built with `libusb-0.1` to continue call the API functions in the `usb_*` convention.
+
+### CMAKE error “usb.h: No such file or directory”:
+`lib/PointATC3DG.cpp` requires 
 
