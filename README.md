@@ -82,9 +82,4 @@ A `.rules` file is a udev rule. udev is the Linux device manager that creates `/
 Also, make sure that the current user is in the `plugdev` group, otherwise even if trakSTAR's group is set to `plugdev` we won't be able to claim it. This will cause the “could not claim interface” error. To verify this, run `id` and see if the output include `plugdev`.
 
 ### "setting configuration” error: 
-
-
-
-`lib/PointATC3DG.cpp` has all the error printouts. 
-
-
+This is an error raised by `lib/PointATC3DG.cpp`: usb_set_configuration(handle, 1) returned Operation not permitted. This happens because many devices already power up in configuration 1. On modern kernels, setting the same configuration again is unnecessary and can return EPERM/EBUSY even though everything is fine. This is why we commented out the set configuration chunk in `lib/PointATC3DG.cpp`. Sidenote: `lib/PointATC3DG.cpp` has all the error printouts. 
